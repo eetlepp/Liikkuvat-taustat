@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html>
+	<title>Liikkuvat taustat</title>
+	<head>
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		
+		<h1>Space</h1>
+		<img id="space" width="1041" height="781" src="space.jpg" alt="space", style="display: none;">
+		<canvas id="space" width="2048" height="256" style="left: 50%; margin-left: 425px;"></canvas>
+		
+		<h1>Plains</h1>
+		<img id="plains" width="1600" height="600" src="plains.jpg" alt="plains", style="display: none;">
+		<canvas id="plains" width="2048" height="256" style="left: 50%; margin-left: 425px;"></canvas>
+		
+		<h1>Tundra</h1>
+		<img id="tundra" width="728" height="424" src="tundra.jpg" alt="tundra", style="display: none;">
+		<canvas id="tundra" width="2048" height="256" style="left: 50%; margin-left: 425px;"></canvas>
+
+		<h1>Forest</h1>
+		<img id="forest" width="1024" height="681" src="forest.jpg" alt="forest", style="display: none;">
+		<canvas id="forest" width="2048" height="256" style="left: 50%; margin-left: 425px;"></canvas>
+
+		<h1>Desert</h1>
+		<img id="desert" width="550" height="366" src="desert.jpg" alt="desert", style="display: none;">
+		<canvas id="desert" width="2048" height="256" style="left: 50%; margin-left: 425px;"></canvas>
+	</head>
+
+	<body style="background-color:grey">
+		<script>
+			var canvases = document.getElementsByTagName('canvas'); // useita canvaseja.
+			
+			class movingbackground
+			{
+				constructor(acvs, ax, ay, aw, ah, img)
+				{
+					this.cvs = acvs;
+					this.c = acvs.getContext('2d');;
+					this.x = ax;
+					this.y = ay;
+					this.w = aw;
+					this.h = ah;
+					this.image = document.getElementById(img);
+				}
+				
+				clear()
+				{
+					this.c.clearRect(0,0,this.w,this.h); // tyhjennä tausta.
+				}
+				
+				render()
+				{
+					var rect = this.cvs.getBoundingClientRect();
+					this.c.drawImage(this.image, this.x, this.y-(rect.top*0.2), 1041, 781); // liuta taustaa.
+				}
+			}
+			
+			var backgrounds = [];
+			var backgroundcount = 0;
+			
+			function addbackground(cvs, width, height)
+			{
+				backgrounds[backgroundcount] = new movingbackground(cvs, 0, -256, width, height, cvs.id);
+				backgroundcount++;
+			}
+			
+			for(var i=0; i<canvases.length; i++)
+			{
+				addbackground(canvases[i], canvases[i].width, canvases[i].height);
+			}
+			
+			function render(n) 
+			{
+				for(var i=0;i<backgroundcount;i++)
+				{
+					backgrounds[i].clear();
+					backgrounds[i].render();
+				}
+				requestAnimationFrame(render);
+			}
+			requestAnimationFrame(render);
+		</script>
+	</body>
+</html>
